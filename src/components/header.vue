@@ -167,9 +167,8 @@ export default {
   height: 34px;
   display: flex;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
   padding: 4px;
-
 }
 
 #logo {
@@ -250,7 +249,7 @@ export default {
 
 #btns-one {
   padding: 0px;
-  margin:5px 0px;
+  margin: 5px 0px;
   list-style-type: none;
   white-space: nowrap;
 }
@@ -328,7 +327,7 @@ export default {
 .active-tab {
   color: #fff;
   font-size: 15px;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid#F85149;
 }
 
 #image-switch {

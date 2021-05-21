@@ -1,11 +1,11 @@
 import gql from "graphql-tag";
-export const REPOSITORIES = gql`
+ export const REPOSITORIES = gql`
   query ($options: String!) {
-    search(query: $options, type: REPOSITORY, first: 20) {
+    search(query: " user:xceldeveloper", type: REPOSITORY, first: 20) {
       repositoryCount
       edges {
         node {
-          ... on Repository {
+          ... on Repository { 
             nameWithOwner
             createdAt
             forkCount
@@ -21,9 +21,9 @@ export const REPOSITORIES = gql`
   }
 `;
 
-// export const PROFILE = gql`
+//  export const PROFILE = gql`
 // query($user: String!){
-//   search(query: user:$user, type: USER, first: 10) {
+//   search(query:" user:xceldeveloper ", type: USER, first: 10) {
 //     edges {
 //       node {
 //         ... on User {
@@ -81,3 +81,4 @@ export const REPOSITORIES = gql`
 //   }
 // }
 // `
+// export{REPOSITORIES,PROFILE}

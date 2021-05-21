@@ -9,10 +9,6 @@ import VueThemeManager from 'vue-theme-manager'
 let themeOptions = {
 activate:'light',
 styles:{
-     light:{
-           backgroundColor:'#ededed',
-           textColor:'#101010'
-            },
      dark:{
            backgroundColor:'#0D1117',
            textColor:'#ededed'

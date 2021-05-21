@@ -13,7 +13,7 @@ const AUTH_TOKEN = "apollo-token";
 
 // Http endpoint
 const httpEndpoint =
-  process.env.VUE_APP_GRAPHQL_HTTP || "http://localhost:4000/graphql";
+  process.env.VUE_APP_GRAPHQL_HTTP || "https://api.github.com/graphql";
 
 // Config
 const defaultOptions = {
@@ -21,7 +21,8 @@ const defaultOptions = {
   httpEndpoint,
   // You can use `wss` for secure connection (recommended in production)
   // Use `null` to disable subscriptions
-  wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || "ws://localhost:4000/graphql",
+ // wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || "ws://localhost:4000/graphql",
+ wsEndPoint:null,
   // LocalStorage token
   tokenName: AUTH_TOKEN,
   // Enable Automatic Query persisting with Apollo Engine
@@ -42,6 +43,16 @@ const defaultOptions = {
 
   // Override the way the Authorization header is set
   // getAuth: (tokenName) => ...
+
+  getAuth:()=>{
+    const token = "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";
+
+    if(token){
+      return 'Bearer ' + token
+    }else{
+      return ''
+    }
+  }
 
   // Additional ApolloClient options
   // apollo: { ... }
