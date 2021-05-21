@@ -1,20 +1,20 @@
-
-
 <template>
   <div>
     <app-header />
 
-    <h3>{{ search }}</h3>
+    <tabmenu />
   </div>
 </template>
 
 <script>
 import appHeader from "../components/header.vue";
+import tabmenu from "../components/tabmenu.vue";
 //   import {REPOSITORIES} from '../queries/github'
 
 export default {
   components: {
     appHeader,
+    tabmenu,
   },
   //   apollo: {
   //     search:{
@@ -35,5 +35,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

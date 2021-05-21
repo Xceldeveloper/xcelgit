@@ -1,25 +1,25 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 export const REPOSITORIES = gql`
-query($options: String!){
-  search(query:$options, type: REPOSITORY, first: 20) {
-    repositoryCount
-    edges {
-      node {
-        ... on Repository {
-          nameWithOwner
-          createdAt
-          forkCount
-          homepageUrl
-          licenseInfo {
-            nickname
-            url
+  query ($options: String!) {
+    search(query: $options, type: REPOSITORY, first: 20) {
+      repositoryCount
+      edges {
+        node {
+          ... on Repository {
+            nameWithOwner
+            createdAt
+            forkCount
+            homepageUrl
+            licenseInfo {
+              nickname
+              url
+            }
           }
         }
       }
     }
   }
-}`
-
+`;
 
 // export const PROFILE = gql`
 // query($user: String!){
@@ -74,7 +74,7 @@ query($options: String!){
 //               websiteUrl
 //             }
 //           }
-          
+
 //         }
 //       }
 //     }

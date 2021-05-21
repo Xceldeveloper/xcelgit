@@ -75,7 +75,7 @@
         <img id="logo" src="../assets/github-logo.png" alt="" />
 
         <button id="alert-btn">
-          <span class="mdi mdi-bell-outline"></span>b
+          <span class="mdi mdi-bell-outline"></span>
         </button>
       </div>
       <div id="menu-extension">
@@ -85,7 +85,7 @@
             id="search-input2"
             placeholder="Search or jump to..."
           />
-          <button id="input-btn">/</button>b
+          <button id="input-btn">/</button>
         </div>
 
         <ul id="small-navigation">
@@ -155,7 +155,7 @@ export default {
 </script>
 
 <style scoped>
-@import '../assets/materialdesignicons.min.css';
+@import "../assets/materialdesignicons.min.css";
 .hero1 {
   height: 63px;
   display: flex;
@@ -168,6 +168,8 @@ export default {
   display: flex;
   width: 100%;
   overflow: auto;
+  padding: 4px;
+
 }
 
 #logo {
@@ -178,21 +180,21 @@ export default {
 
 #input-cover {
   background-color: #0d1117;
-  height: 29px;
+  height: 100%;
   padding: 0px 8px;
   border: 0.5px solid #393c41;
   border-radius: 30px;
   width: auto;
-  margin: 2px 0px;
+  margin: 1px 0px;
 }
 
 #search-input {
   outline-style: none;
   height: 100%;
   width: 272px;
-  color: #fff;
+  color: green;
   border: none;
-  padding: 3px;
+  padding: 0px;
   background-color: transparent;
   transition: ease-in 0.3s all;
 }
@@ -248,7 +250,7 @@ export default {
 
 #btns-one {
   padding: 0px;
-  margin: 0px;
+  margin:5px 0px;
   list-style-type: none;
   white-space: nowrap;
 }
@@ -417,7 +419,6 @@ export default {
     border: none;
     padding: 3px;
     background-color: transparent;
-    border: 1px solid red;
   }
 
   #small-navigation {
