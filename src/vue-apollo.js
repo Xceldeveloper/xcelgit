@@ -45,7 +45,7 @@ const defaultOptions = {
   // getAuth: (tokenName) => ...
 
   getAuth:()=>{
-    const token = "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";
+    const token = "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";
 
     if(token){
       return 'Bearer ' + token

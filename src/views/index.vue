@@ -1,166 +1,173 @@
 <template>
-  <div class="container">
+  <div class="container" v-cloak>
     <app-header />
-    
+
     <div id="over-all-wrapper">
       <div id="content-wrapper">
         <div id="user-details-wrapper">
           <div id="polifix-wrapper">
-            <div id="profile-pic-wrapper" v-if="avatar != ''">
-              <a :href="'https://github.com/'+username">
-                <img id="avatar" :src="avatar" :alt="username"
+            <div id="profile-pic-wrapper" v-if="data.avatarUrl != ''">
+              <a :href="'https://github.com/' + username">
+                <img id="avatar" :src="data.avatarUrl"
               /></a>
-              <button id="set-status-btn">
-                <span class="mdi mdi-emoticon-excited-outline"></span>
+              <button id="set-status-btn" v-html="data.status.emojiHTML">
+                <!-- <span class="mdi mdi-emoticon-excited-outline"></span> -->
               </button>
             </div>
 
-            <span id="name">{{ name }}</span>
+            <span id="name" v-if="data.name !== ''">{{ data.name }}</span>
             <span id="user-name">{{ username }}</span>
-            <span id="user-bio"> {{ bio }}</span>
+            <span id="user-bio" v-if="data.bio !== ''"> {{ data.bio }}</span>
           </div>
 
           <button id="set-stat-btn2">
-            <span class="mdi mdi-emoticon-excited-outline"></span> Set status
+            <span
+              class="mdi mdi-emoticon-excited-outline"
+              v-if="data.isViewer"
+            ></span>
+            Set status
           </button>
 
-          <button id="edit-profile-btn">Edit profile</button>
+          <button id="edit-profile-btn" v-if="data.isViewer">
+            Edit profile
+          </button>
+          <button id="edit-profile-btn" v-else>Follow</button>
 
-          <ul id="user-internal-links" v-if="followers_count > 0 || following_count > 0">
-            <li v-if="followers_count > 0">
+          <ul id="user-internal-links" v-if="data.followers && data.following">
+            <li v-if="data.followers.totalCount > 0">
               <span
-                style="color: #616972"
+                style="color: #616972; margin-right: 5px"
                 class="mdi mdi-account-supervisor-outline"
               ></span>
-              <span style="color: #c9d1d9">{{ followers_count }}</span>
-              <a
-                :href="
-                 
-                  'https://github.com/'+username+'?tab=followers'
-                "
+              <span style="color: #c9d1d9; margin-right: 5px">{{
+                data.followers.totalCount
+              }}</span>
+              <a :href="'https://github.com/' + username + '?tab=followers'"
                 >followers</a
               >
             </li>
-            <li><span class="dix" v-if="following_count > 0"></span></li>
-            <li v-if="following_count > 0">
-              <span style="color: #c9d1d9">{{ following_count }}</span>
-              <a :href="  'https://github.com/'+username+'?tab=following'">following</a>
+            <li>
+              <span class="dix" v-if="data.following.totalCount > 0"></span>
             </li>
-            <!-- <li><span class="dix"></span></li> -->
-            <!-- <li>
-              <span style="color: #616972" class="mdi mdi-star-outline"></span>
-              <span style="color: #c9d1d9">11</span>
-            </li> -->
-          </ul>
-
-          <ul id="user-external-links">
-            <li v-if="company != null">
-              <span class="mdi mdi-office-building"></span> {{ company }}
-            </li>
-            <li v-if="location != null">
-              <span class="mdi mdi-map-marker"></span> {{ location }}
-            </li>
-            <li v-if="email != null">
-              <span class="mdi mdi-email"></span> {{ email }}
-            </li>
-
-            <li v-if="blog != ''">
-              <a :href="'http://' + blog"
-                ><span class="mdi mdi-link"></span> {{ blog }}</a
+            <li v-if="data.following.totalCount > 0">
+              <span style="color: #c9d1d9">{{
+                data.following.totalCount
+              }}</span>
+              <a
+                style="margin-left: 5px"
+                :href="'https://github.com/' + username + '?tab=following'"
+                >following</a
               >
             </li>
-            <li v-if="twitter_username != ''">
-              <a :href="'https://twitter.com/' + twitter_username"
-                ><span class="mdi mdi-twitter"></span> @{{
-                  twitter_username
+            <li><span class="dix"></span></li>
+          
+            <li
+              v-if="
+                data.starredRepositories.totalCount &&
+                data.starredRepositories.totalCount > 0
+              "
+            >
+              <a
+                style="margin-left: 3px;color:#fff"
+                :href="'https://github.com/' + username + '?tab=stars'"
+                ><span
+                  style="color: #616972; margin-right: 2px"
+                  class="mdi mdi-star-outline"
+                ></span>
+                {{
+                  data.starredRepositories.totalCount
                 }}</a
               >
             </li>
           </ul>
-          <br />
-          {{search}}
-          <!-- <div id="divider"></div>
 
-          <span id="organizations-title">Organizations</span> -->
-          <!-- <ul id="organization-badge">
-            <li>
-              <img src="../assets/organizationimage.png" />
+          <ul id="user-external-links">
+            <li v-if="data.company != null">
+              <span class="mdi mdi-office-building"></span> {{ data.company }}
             </li>
-            <li>
-              <img src="../assets/organizationimage.png" />
+            <li v-if="data.location != null">
+              <span class="mdi mdi-map-marker"></span> {{ data.location }}
             </li>
-            <li>
-              <img src="../assets/organizationimage.png" />
+            <li v-if="data.email !== null && data.email !== ''">
+              <a :href="'mailto:'+email"><span class="mdi mdi-email"></span> {{ data.email }}</a>
             </li>
-          </ul> -->
 
-          <tabmenu />
+            <li v-if="data.websiteUrl != ''">
+              <a :href="'http://' + blog"
+                ><span class="mdi mdi-link"></span> {{ data.websiteUrl }}</a
+              >
+            </li>
+            <li v-if="data.twitterUsername != ''">
+              <a :href="'https://twitter.com/' + data.twitterUsername"
+                ><span class="mdi mdi-twitter"></span> @{{
+                  data.twitterUsername
+                }}</a
+              >
+            </li>
+          </ul>
+
+          <template v-if="data.isViewer">
+            <!-- <br>
+            <div  id="divider"></div>
+              <span id="organizations-title">Organizations</span> 
+           <ul id="organization-badge">
+            <li>
+              <img src="../assets/organizationimage.png" />
+            </li>
+            <li>
+              <img src="../assets/organizationimage.png" />
+            </li>
+            <li>
+              <img src="../assets/organizationimage.png" />
+            </li>
+          </ul>  -->
+          </template>
+          <!-- <tabmenu /> -->
         </div>
 
-        <!-- <div id="more-wrapper">
-          <respositoriestab v-if="username != ''" :username="username" />
-        </div> -->
+        <div id="dynamic-component-wrapper">
+          <component :username="username" :is="activeComponent" />
+        </div>
       </div>
     </div>
 
-    <div id="footer">
+    <div id="footer" style="display: none">
       <span class="full-year"
-        ><span class="mdi mdi-copyright"></span> <a href="https://xceldeveloper.com">xceldeveloper</a>
+        ><span class="mdi mdi-copyright"></span>
+        <a href="https://xceldeveloper.com">xceldeveloper</a>
         {{ new Date().getFullYear() }}</span
       >
     </div>
-    
   </div>
 </template>
 
 <script>
 import appHeader from "../components/header.vue";
 import tabmenu from "../components/tabmenu.vue";
-import gql from "graphql-tag";
-  const REPOSITORIES = gql`
-  query ($options: String!) {
-    search(query: " user:xceldeveloper", type: REPOSITORY, first: 20) {
-      repositoryCount
-      edges {
-        node {
-          ... on Repository { 
-            nameWithOwner
-            createdAt
-            forkCount
-            homepageUrl
-            licenseInfo {
-              nickname
-              url
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
+import repositories from "../components/tabs/repositories.vue";
+import { PROFILE } from "../queries/github";
 
 export default {
   components: {
     appHeader,
     tabmenu,
+    repositories: repositories,
   },
-    apollo: {
-      search:{
-        query:REPOSITORIES,
-              variables () {
-          return {
-            options: ' language:vue user:xceldeveloper '
-          }
-        }
+  apollo: {
+    search: {
+      query: PROFILE,
+      variables() {
+        return {
+          user: `  user:${this.$route.params.username} `,
+        };
       },
-
     },
+  },
   data() {
     return {
-      search: [],
-      activeComponent:"",
-       name: "",
+      search: "",
+      activeComponent: "repositories",
+      name: "",
       username: "",
       avatar: "",
       followers_count: "",
@@ -178,21 +185,33 @@ export default {
       },
     };
   },
-  watch:{
-    search:{
-      immediate:true,
-      handler(val){
-        console.log(JSON.stringify(val,null,2));
+  watch: {
+    search: {
+      immediate: true,
+      handler(val) {
+       // console.log(JSON.stringify(val, null, 2));
+      },
+    },
+  },
+  computed: {
+    data() {
+      if (this.search == "") {
+        return {};
+      } else {
+        return this.search.edges[0].node;
       }
-    }
-  }
+    },
+  },
+  mounted() {
+    this.username = this.$route.params.username;
+    // this.activeComponent =  this.$route.query.tab+""
+  },
 };
 </script>
 
 <style scoped>
-
 .container {
-  height: auto;
+  min-height: 100vh;
   width: 100%;
   padding: 0px;
   margin: 0px;
@@ -206,14 +225,14 @@ export default {
 }
 
 #user-details-wrapper {
-  width: 25%;
+  width: 27%;
   height: auto;
   position: relative;
 }
 
 #profile-pic-wrapper {
-  width: 250px;
-  height: 250px;
+  width: 270px;
+  height: 270px;
   background-color: #0d1117;
   margin: 0px 7.5%;
   border-radius: 50%;
@@ -238,7 +257,8 @@ export default {
   border: 0.5px solid #393c41;
   border-radius: 50%;
   height: 35px;
-  font-size: 21px;
+  text-align: center;
+  font-size: 16px;
   width: 35px;
   outline-style: none;
   background-color: #202022;
@@ -260,6 +280,7 @@ export default {
   color: #c9d1d9;
   padding: 0px 7.5%;
   font-weight: bold;
+  text-align: left;
 }
 
 #user-name {
@@ -267,13 +288,16 @@ export default {
   font-size: 20px;
   color: #616972;
   padding: 2px 7.5%;
+  text-align: left;
 }
 
 #user-bio {
   display: block;
-  font-size: 20px;
+  font-size: 17px;
   color: #c9d1d9;
-  padding: 5px 7.5%;
+  padding: 8px 7.5%;
+  margin-top: 6px;
+  text-align: left;
 }
 
 #edit-profile-btn {
@@ -296,7 +320,7 @@ export default {
 #user-internal-links {
   list-style-type: none;
   padding: 0px;
-  margin: 0px 5%;
+  margin: 20px 1%;
 }
 
 #user-internal-links li {
@@ -334,12 +358,13 @@ export default {
 
 #user-external-links li {
   padding: 3px 0px;
-  color: #c9d1d9;
+  text-align: left;
+  color: #ababaf;
 }
 
 #user-external-links li a {
   text-decoration: none;
-  color: #c9d1d9;
+  color: #ababaf;
 }
 
 #user-external-links li a:hover {
@@ -397,7 +422,7 @@ export default {
     display: flex;
   }
 
-  #more-wrapper {
+  #dynamic-component-wrapper {
     width: 100%;
     flex: 1;
   }
@@ -421,7 +446,7 @@ export default {
     display: flex;
   }
 
-  #more-wrapper {
+  #dynamic-component-wrapper {
     min-height: 100vh;
     width: 100%;
     flex: 1;
@@ -496,7 +521,8 @@ export default {
   color: #fff;
 }
 
-.full-year a{
+.full-year a {
   color: #fff;
   text-decoration: none;
-}</style>
+}
+</style>

@@ -1,60 +1,103 @@
 <template>
-  <div id="containerx">
+  <div id="containerx" v-cloak v-if="canShow">
     <div id="more-sec-one">
       <input type="text" id="find-repo-input" placeholder="Find a repository" />
 
       <div id="sub-sec">
-        <!-- <button class="sub-btn" @click="showB =  true">
-                Type: <span style="color: #fff">All</span>
-                <span class="mdi mdi-chevron-down"></span>
-              </button>
-              <button class="sub-btn">
-                Type: <span style="color: #fff">Language</span>
-                <span class="mdi mdi-chevron-down"></span>
-              </button>
-              -->
-
+        
         <div class="dropdown">
           <button @click="showFcunction(0)" class="sub-btn dropbtn">
-            Type: <span style="color: #fff">All</span>
+            Type
             <span class="mdi mdi-chevron-down"></span>
           </button>
           <div id="myDropdown" class="dropdown-wrapper">
             <span class="dropdown-title">Select type</span>
             <ul id="dropdown-content">
-              <li>All</li>
-              <li>Public</li>
-              <li>Private</li>
-              <li>Sources</li>
-              <li>Forks</li>
-              <li>Archived</li>
-              <li>Mirrors</li>
+              <li  @click="repo_type = 'fork:true '"
+                :class="[
+                  repo_type == 'fork:true ' ? 'active-dropdown' : '',
+                ]">All</li>
+
+               <!-- <li  @click="repo_type = 'is:public'"
+                :class="[
+                  repo_type == 'is:public' ? 'active-dropdown' : '',
+                ]">Public</li> -->
+
+               <!-- <li  @click="repo_type = 'is:private'"
+                :class="[
+                  repo_type == 'is:private' ? 'active-dropdown' : '',
+                ]">Private</li> -->
+
+               <!-- <li  @click="repo_type = 'is:source'"
+                :class="[
+                  repo_type == 'is:source' ? 'active-dropdown' : '',
+                ]">Sources</li> -->
+
+               <li  @click="repo_type = 'fork:true'"
+                :class="[
+                  repo_type == 'fork:true' ? 'active-dropdown' : '',
+                ]">Forks</li>
+
+               <li  @click="repo_type = 'archived:true'"
+                :class="[
+                  repo_type == 'archived:true' ? 'active-dropdown' : '',
+                ]">Archived</li>
+
+               <li  @click="repo_type = ''"
+                :class="[
+                  repo_type == 'mirror:true' ? 'active-dropdown' : '',
+                ]">Mirrors</li>
             </ul>
           </div>
         </div>
 
         <div class="dropdown">
           <button @click="showFcunction(1)" class="sub-btn dropbtn">
-            Type: <span style="color: #fff">Language</span>
+            Language
             <span class="mdi mdi-chevron-down"></span>
           </button>
           <div id="myDropdown2" class="dropdown-wrapper">
             <span class="dropdown-title">Select Language</span>
             <ul id="dropdown-content">
-              <li>All</li>
-              <li>Vue</li>
-              <li>Dart</li>
-              <li>JavaScript</li>
-              <li>TypeScript</li>
-              <li>HTML</li>
-              <li>Python</li>
+              <li :class="[  repo_language_filter == '' ? 'active-dropdown' : '']" @click="repo_language_filter = ''" >All</li>
+               <li   :class="[  repo_language_filter == lang ? 'active-dropdown' : '']"    v-for="(lang,index) in all_languages" :key="index" @click="repo_language_filter = lang">{{lang}}</li>
             </ul>
           </div>
         </div>
 
+        <div class="dropdown">
+          <button @click="showFcunction(2)" class="sub-btn dropbtn">
+            Sort
+            <span class="mdi mdi-chevron-down"></span>
+          </button>
+          <div id="myDropdown3" class="dropdown-wrapper">
+            <span class="dropdown-title">Select Order</span>
+            <ul id="dropdown-content">
+              <li
+                @click="repo_sort_order = 'sort:updated-desc'"
+                :class="[
+                  repo_sort_order == 'sort:updated-desc'
+                    ? 'active-dropdown'
+                    : '',
+                ]"
+              >
+                Last updated
+              </li>
+              <li
+                @click="repo_sort_order = 'sort:stars-desc'"
+                :class="[
+                  repo_sort_order == 'sort:stars-desc' ? 'active-dropdown' : '',
+                ]"
+              >
+                Stars
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- 
         <button id="create-repo-btn">
           <span class="mdi mdi-book-play-outline"></span> New
-        </button>
+        </button> -->
       </div>
       <br />
     </div>
@@ -62,34 +105,61 @@
     <div v-if="errorLoading && !loading" id="error-wrapper" @click="getRepos">
       Error Loading repositories tap to retry
     </div>
-    <div class="repo-cover" v-for="(repo, index) in repox" :key="index">
+
+    <!-- <div>
+        <span v-html="filter_remark"></span>
+    </div> -->
+    <div class="repo-cover" v-for="(repo, index) in repositories" :key="index">
       <div class="inner-rep-cover">
         <div class="text-cover">
-          <span class="repo-name"
-            ><a :href="repo.html_url">{{ repo.name }}</a></span
-          ><br v-if="repo.description != null" />
+          <span class="repo-name">
+            <a :href="repo.url">{{ repo.name }}</a>
+          </span>
+
+          <br v-if="repo.description != null" />
+
           <span v-if="repo.description != null" class="repo-desc">{{
             repo.description
           }}</span
           ><br />
+          <div style="margin-top: 10px; overflow: auto">
+            <span
+              class="repo_topics"
+              v-for="(topic, index) in repo.repositoryTopics.nodes"
+              :key="index"
+            >
+              {{
+                topic.resourcePath.substring(
+                  topic.resourcePath.lastIndexOf("/") + 1,
+                  topic.resourcePath.length
+                )
+              }}
+            </span>
+          </div>
+
           <span class="repo-datex">
-            <b>{{ repo.language }}</b>
-            <span v-if="repo.watchers > 0"
-              ><span class="mdi mdi-star-outline"></span>
-              {{ repo.watchers }}</span
+            <span v-if="repo.primaryLanguage != null">
+              <span
+                v-if="repo.primaryLanguage.color !== undefined"
+                :style="
+                  'border-radius:50%;margin-right:10px;height:10px;width:10px;background-color:' +
+                  repo.primaryLanguage.color
+                "
+              ></span>
+              <b>{{ repo.primaryLanguage.name }}</b>
+            </span>
+
+            <span style="word-spacing: 0px" v-if="repo.stargazerCount > 0">
+              <span class="mdi mdi-star-outline"></span>
+              {{ repo.stargazerCount }}
+            </span>
+
+            <span v-if="repo.forkCount > 0"
+              ><span class="mdi mdi-source-fork"></span>
+              {{ repo.forkCount }}</span
             >
 
-            Updated
-            <!-- {{ formatRepoTime(moment, repo.updated_at, true, false) }} -->
-
-            {{
-              
-         formatTime(moment,repo.updated_at)
-        
-        }}
-           
-
-
+            <span> Updated {{ formatTime(moment, repo.updatedAt) }} </span>
           </span>
         </div>
         <div class="actn-cover">
@@ -104,10 +174,11 @@
 
 <script>
 const moment = require("moment-timezone");
+import { REPOSITORIES,ALL_LANGUAGES } from "../../queries/github";
 export default {
   props: {
     username: {
-      default: "xceldeveloper",
+      default: "",
     },
   },
   data() {
@@ -116,34 +187,19 @@ export default {
       repositories: [],
       errorLoading: false,
       loading: false,
+      repositories: [],
+      canShow: false,
+      all_languages:[],
+      repo_type: "fork:true ",
+      repo_language_filter: "",
+      repo_sort_order: "sort:updated-desc",
+       language_remark:"",
+       type_remark:"",
+       sort_remark:"",
+      filter_remark:""
     };
   },
-  mounted() {
-    var h = document.getElementById("header");
-    //  var readout = document.getElementById("readout");
-    var stuck = false;
-    var stickPoint = getDistance();
-
-    function getDistance() {
-      var topDist = h.offsetTop;
-      return topDist;
-    }
-
-    window.onscroll = function (e) {
-      var distance = getDistance() - window.pageYOffset;
-      var offset = window.pageYOffset;
-      // readout.innerHTML =
-      //   stickPoint + "   " + distance + "   " + offset + "   " + stuck;
-      if (distance <= 0 && !stuck) {
-        h.style.position = "fixed";
-        h.style.top = "0px";
-        stuck = true;
-      } else if (stuck && offset <= stickPoint) {
-        h.style.position = "static";
-        stuck = false;
-      }
-    };
-
+  async mounted() {
     window.onclick = function (event) {
       if (!event.target.matches(".dropbtn")) {
         var dropdowns = document.getElementsByClassName("dropdown-wrapper");
@@ -157,78 +213,141 @@ export default {
       }
     };
 
-    this.getRepos();
+    setTimeout(() => {
+      this.canShow = true;
+    }, 1000);
+
+   await this.getRepos();
+   //  console.log(JSON.stringify(this.repositories, null, 2));
+
+     this.getAll_Languages();
   },
   methods: {
     showFcunction(which) {
       if (which == 0) {
         document.getElementById("myDropdown").classList.toggle("show");
-      } else {
+      } else if (which == 1) {
         document.getElementById("myDropdown2").classList.toggle("show");
+      } else {
+        document.getElementById("myDropdown3").classList.toggle("show");
       }
     },
 
-    getRepos() {
-      this.loading = true;
-      this.errorLoading = false;
-      this.$axios
-        .$get(
-          "https://api.github.com/users/" +
-            this.username +
-            "/repos?per_page=100"
-        )
-        .then((res) => {
-          this.repositories = res;
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-          this.errorLoading = true;
-        });
+    async getRepos() {
+      this.repositories = [];
+      let data = await this.$apollo.query({
+        query: REPOSITORIES,
+        variables: { options: this.options },
+      });
+      this.repositories = data.data.search.edges.map((e) => {
+        return e.node;
+      });
     },
 
-    formatTime(moment,date){
-      var t =   moment(date).from(
-          new Date().toISOString()
+    formatTime(moment, date) {
+      var t = moment(date).from(new Date().toISOString());
+
+      var isMOnth = /month|months/.test(t);
+       if (isMOnth) {
+        return (
+          "on " +
+          moment(date).calendar(null, {
+            lastDay: "dd, LT",
+            lastWeek: "MMM D",
+            sameElse: "MMM D YYYY ",
+          })
         );
+      } else {
+        return t;
+      }
+    },
 
-         var isMOnth = /month|months/.test(t);
-         var limited = false;
+    async getAll_Languages(){
+      let {data} = await this.$apollo.query({
+        query: ALL_LANGUAGES,
+        variables: { user: 'fork:true user:'+this.username },
+      });
 
-         if(isMOnth){
-           return "on " + moment(date).calendar(null, {
-          lastDay:  "dd, LT",
-          lastWeek: "MMM D",
-          sameElse:  "MMM D ",
-        });
-         }else{
-           return t;
+      this.all_languages = [];
+
+    
+       data.search.edges.map((e)=>{
+       return e.node.languages.nodes.map((e)=>{
+         if(this.all_languages.indexOf(e.name) == -1){
+         this.all_languages.push(e.name)
          }
 
+         return e.name});
+      });
 
-
-
+   console.log(JSON.stringify(this.all_languages,null,2));
+      //console.log(data);
     }
   },
   computed: {
-    repox() {
-      return this.repositories
-        .sort((a, b) => {
-          return (
-            moment(a.updated_at).format("YYYYMMDD") -
-            moment(b.updated_at).format("YYYYMMDD")
-          );
+    options() {
+      let options = "";
 
-          // return this.commenters;
-        })
-        .reverse();
+      //work on sort order 
+      options += this.repo_sort_order + " ";
+
+      if (this.repo_type != "") {
+        options += this.repo_type + " ";
+      }
+
+      // work on language filter (can't be empty)
+      if(this.repo_language_filter == ""){
+      this.all_languages.map((e) => {
+        options += "language:" + e + " ";
+      });
+      console.log("not empty")
+      }else{
+        options += "language:" + this.repo_language_filter.toLowerCase() + " "
+      }
+
+      console.log(options)
+      
+
+      return (options += "user:" + this.username);
     },
   },
-  watch:{
-    repositories(val){
-      console.log(JSON.stringify(val,null,2));
-    }
-  }
+  watch: {
+    repositories:{
+      immediate:true,
+      handler(val){
+        console.log(JSON.stringify(val,null,2));
+      }
+    },
+      username() {
+        this.getRepos();
+      },
+    repo_sort_order(val) {
+      this.getRepos();
+      this.sort_remark = val == 'sort:updated-desc' ? 'sorted by <b>last updated</b>' : 'sorted by <b>stars</b>'
+      this.filter_remark = this.type_remark +this.language_remark + this.sort_remark
+    },
+    repo_language_filter: {
+      deep: true,
+      handler(val) {
+        this.getRepos();
+        this.filter_remark = ""
+
+        if(val !== ""){
+        this.language_remark = val !== '' ? "written in "+val : '';
+         this.filter_remark = this.type_remark +this.language_remark + this.sort_remark
+        }
+      },
+    },
+    repo_type(val) {
+      this.getRepos();
+      this.type_remark = val == '' ? '' : val == 'is:public' ? '<b>public</b>' : val == 'is:private' ? '<b>private</b>' : val == 'fork:true' ? '<b>forked</b>' : val == 'archived:true' ? '<b>archived</b>' : val == 'mirror:true' ? '<b>mirrored</b>' : val == 'is:source' ? '<b>source</b>' : '';
+       this.type_mark = 'results for '+this.type_remark;
+
+       this.filter_remark = this.type_remark +this.language_remark + this.sort_remark
+
+       console.log(JSON.stringify(this.repositories, null, 2));
+    },
+  },
 };
 </script>
 
@@ -246,11 +365,22 @@ export default {
   outline-style: none;
   height: 30px;
   border-radius: 25px;
-  padding: 10px;
+  padding: 3px 10px;
   border: 0.5px solid #393c41;
 
   color: #fff;
   flex: 1;
+}
+
+.repo_topics {
+  color: #1180e7;
+  background-color: #2774bd3b;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-block;
+  margin: 5px;
+  padding: 5px 10px;
 }
 
 #sub-sec {
@@ -265,15 +395,15 @@ export default {
   color: #c9d1d9;
   background-color: #393c41;
   border: none;
-  padding: 7px 10px;
+  padding: 12px 25px;
   font-size: 12px;
   outline-style: none;
   margin: 0px 0px 0px 10px;
-  border-radius: 20px;
+  border-radius: 25px;
 }
 
 .sub-btn:hover {
-  padding: 8px 9.5px;
+  padding: 12px 23px;
   border: 0.5px solid #c9d1d9;
   cursor: pointer;
 }
@@ -333,6 +463,7 @@ export default {
     position: absolute;
     background-color: #393c41;
     min-width: 280px;
+   
     margin: 5px 0px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
     z-index: 1;
@@ -345,7 +476,7 @@ export default {
     padding: 10px;
     font-size: 12px;
     display: block;
-    border-bottom: 0.1px solid #b1b1b1;
+    border-bottom: 0.1px solid #5a5a5a;
   }
 
   /* Show the dropdown menu (use JS to add this class to the .dropdown-wrapper container when the user clicks on the dropdown button) */
@@ -357,15 +488,18 @@ export default {
     margin: 0px 0px;
     padding: 0px;
     list-style-type: none;
+     max-height: 400px;
+    overflow: auto;
   }
 
   #dropdown-content li {
-    padding: 7px 10px;
+    padding: 11px 12px;
     color: #c9d1d9;
     font-size: 13px;
     cursor: pointer;
   }
 
+  .active-dropdown,
   #dropdown-content li:hover {
     background-color: rgba(0, 0, 0, 0.4);
   }
@@ -495,6 +629,14 @@ export default {
   display: block;
   padding: 12px 0px;
   font-size: 14px;
+  white-space: nowrap;
+}
+
+.repo-datex span {
+  display: inline-block;
+
+  margin: 0px 5px;
+  text-align: left;
 }
 
 .star-repo-btn {
@@ -521,5 +663,9 @@ export default {
   color: cornflowerblue;
   cursor: pointer;
   margin-top: 200px;
+}
+
+* {
+  text-align: left;
 }
 </style>

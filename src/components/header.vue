@@ -168,7 +168,7 @@ export default {
   display: flex;
   width: 100%;
   overflow: hidden;
-  padding: 4px;
+  padding: 4px 0px;
 }
 
 #logo {
@@ -312,7 +312,7 @@ export default {
   height: 35px;
   width: 100%;
 
-  font-size: 12px;
+  font-size: 17px;
   border: none;
   outline-style: none;
 }
@@ -321,13 +321,13 @@ export default {
   color: #c9d1d9;
   font-size: 14.5px;
   cursor: pointer;
-  border-bottom: 1px solid lightgrey;
+  border-bottom: 2px solid lightgrey;
 }
 
 .active-tab {
   color: #fff;
   font-size: 15px;
-  border-bottom: 1px solid#F85149;
+  border-bottom: 2.5px solid#F85149;
 }
 
 #image-switch {
