@@ -1,5 +1,11 @@
 # xcelgit
 
+
+## Demo
+[https://xcelgit.netlify.app/?user=xceldeveloper&tab=respositories](https://xcelgit.netlify.app/?user=xceldeveloper&tab=respositories) 
+
+note user= can be any github username
+
 ## Project setup
 ```
 npm install
