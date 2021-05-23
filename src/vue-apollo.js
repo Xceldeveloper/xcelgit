@@ -13,7 +13,7 @@ const AUTH_TOKEN = "apollo-token";
 
 // Http endpoint
 const httpEndpoint =
-  process.env.VUE_APP_GRAPHQL_HTTP || "https://api.github.com/graphql";
+  "https://api.github.com/graphql";
 
 // Config
 const defaultOptions = {
@@ -45,7 +45,7 @@ const defaultOptions = {
   // getAuth: (tokenName) => ...
 
   getAuth:()=>{
-    const token = "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";
+    const token = process.env.VUE_APP_GITHUB_TOKEN
 
     if(token){
       return 'Bearer ' + token

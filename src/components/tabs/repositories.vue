@@ -217,10 +217,12 @@ export default {
       this.canShow = true;
     }, 1000);
 
-   await this.getRepos();
+  
    //  console.log(JSON.stringify(this.repositories, null, 2));
 
      this.getAll_Languages();
+      await this.getRepos();
+     //this.get_allPrimaryLang();
   },
   methods: {
     showFcunction(which) {
@@ -242,6 +244,8 @@ export default {
       this.repositories = data.data.search.edges.map((e) => {
         return e.node;
       });
+
+      
     },
 
     formatTime(moment, date) {
@@ -254,7 +258,7 @@ export default {
           moment(date).calendar(null, {
             lastDay: "dd, LT",
             lastWeek: "MMM D",
-            sameElse: "MMM D YYYY ",
+            sameElse: "MMM D ",
           })
         );
       } else {
@@ -280,8 +284,21 @@ export default {
          return e.name});
       });
 
-   console.log(JSON.stringify(this.all_languages,null,2));
+ //  console.log(JSON.stringify(this.all_languages,null,2));
       //console.log(data);
+    },
+
+    get_allPrimaryLang(){
+       this.all_languages = [];
+      this.repositories.map((e)=>{
+          console.log(this.all_languages+"---->"+e.primaryLanguage.name);
+        if(this.all_languages.indexOf(e.primaryLanguage.name) == -1){
+        
+         this.all_languages.push(e.primaryLanguage.name);
+
+           console.log(this.all_languages);
+         }
+      });
     }
   },
   computed: {

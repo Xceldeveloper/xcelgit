@@ -204,6 +204,7 @@ export default {
   },
   mounted() {
     this.username = this.$route.params.username;
+    console.log(process.env.VUE_APP_GITHUB_TOKEN);
     // this.activeComponent =  this.$route.query.tab+""
   },
 };

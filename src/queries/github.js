@@ -100,7 +100,7 @@ query($user: String!){
 
 export const ALL_LANGUAGES = gql`
 query ($user: String!) {
-  search(query:  $user, type: REPOSITORY, first: 100) {
+  search(query:  $user, type: REPOSITORY, first: 50) {
     repositoryCount
     edges {
       node {
