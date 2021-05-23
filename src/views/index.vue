@@ -158,7 +158,7 @@ export default {
       query: PROFILE,
       variables() {
         return {
-          user: `  user:${this.$route.params.username} `,
+          user: `  user:${this.$route.query.user} `,
         };
       },
     },
@@ -203,7 +203,7 @@ export default {
     },
   },
   mounted() {
-    this.username = this.$route.params.username;
+    this.username = this.$route.query.user;
     console.log(process.env.VUE_APP_GITHUB_TOKEN);
     // this.activeComponent =  this.$route.query.tab+""
   },
