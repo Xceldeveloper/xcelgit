@@ -141,7 +141,7 @@ export default {
       query: PROFILE,
       variables() {
         return {
-          user: `  user:${this.$route.query.user} `,
+          user: `  user:${this.$route.query.username} `,
         };
       },
     },
@@ -186,7 +186,7 @@ export default {
     },
   },
   mounted() {
-    this.username = this.$route.query.user;
+    this.username = this.$route.query.username;
    
     // this.activeComponent =  this.$route.query.tab+""
   },

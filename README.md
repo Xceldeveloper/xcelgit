@@ -2,9 +2,11 @@
 
 
 ## Demo
-[https://xcelgit.netlify.app/?user=xceldeveloper&tab=respositories](https://xcelgit.netlify.app/?user=xceldeveloper&tab=respositories) 
+[https://xcelgit.netlify.app/?username=xceldeveloper&tab=respositories](https://xcelgit.netlify.app/?user=xceldeveloper&tab=respositories) 
 
-note user= can be any github username
+note username= can be any github username
+
+Filtering Repositories by programming language is not yet solid
 
 ## Project setup
 ```
