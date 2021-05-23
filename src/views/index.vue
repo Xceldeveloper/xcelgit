@@ -11,7 +11,7 @@
                 <img id="avatar" :src="data.avatarUrl"
               /></a>
               <button id="set-status-btn" v-html="data.status.emojiHTML">
-                <!-- <span class="mdi mdi-emoticon-excited-outline"></span> -->
+               
               </button>
             </div>
 
@@ -105,25 +105,8 @@
               >
             </li>
           </ul>
-
-          <template v-if="data.isViewer">
-            <!-- <br>
-            <div  id="divider"></div>
-              <span id="organizations-title">Organizations</span> 
-           <ul id="organization-badge">
-            <li>
-              <img src="../assets/organizationimage.png" />
-            </li>
-            <li>
-              <img src="../assets/organizationimage.png" />
-            </li>
-            <li>
-              <img src="../assets/organizationimage.png" />
-            </li>
-          </ul>  -->
-          </template>
-          <!-- <tabmenu /> -->
         </div>
+
 
         <div id="dynamic-component-wrapper">
           <component :username="username" :is="activeComponent" />
@@ -204,7 +187,7 @@ export default {
   },
   mounted() {
     this.username = this.$route.query.user;
-    console.log(process.env.VUE_APP_GITHUB_TOKEN);
+   
     // this.activeComponent =  this.$route.query.tab+""
   },
 };
