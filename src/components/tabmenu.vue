@@ -91,10 +91,11 @@ export default {
   border-bottom: 1px solid lightgrey;
 }
 
-.active-tab {
+
+#page-tabs li button .active-tab {
   color: #fff;
   font-size: 15px;
-  border-bottom: 1px solid #fff;
+  border-bottom: 2.5px solid#F85149;
 }
 
 @media only screen and (max-device-width: 767px) {
