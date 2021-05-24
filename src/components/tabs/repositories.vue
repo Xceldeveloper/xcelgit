@@ -4,7 +4,6 @@
       <input type="text" id="find-repo-input" placeholder="Find a repository" />
 
       <div id="sub-sec">
-        
         <div class="dropdown">
           <button @click="showFcunction(0)" class="sub-btn dropbtn">
             Type
@@ -13,40 +12,48 @@
           <div id="myDropdown" class="dropdown-wrapper">
             <span class="dropdown-title">Select type</span>
             <ul id="dropdown-content">
-              <li  @click="repo_type = 'fork:true '"
-                :class="[
-                  repo_type == 'fork:true ' ? 'active-dropdown' : '',
-                ]">All</li>
+              <li
+                @click="repo_type = 'fork:true '"
+                :class="[repo_type == 'fork:true ' ? 'active-dropdown' : '']"
+              >
+                All
+              </li>
 
-               <!-- <li  @click="repo_type = 'is:public'"
+              <!-- <li  @click="repo_type = 'is:public'"
                 :class="[
                   repo_type == 'is:public' ? 'active-dropdown' : '',
                 ]">Public</li> -->
 
-               <!-- <li  @click="repo_type = 'is:private'"
+              <!-- <li  @click="repo_type = 'is:private'"
                 :class="[
                   repo_type == 'is:private' ? 'active-dropdown' : '',
                 ]">Private</li> -->
 
-               <!-- <li  @click="repo_type = 'is:source'"
+              <!-- <li  @click="repo_type = 'is:source'"
                 :class="[
                   repo_type == 'is:source' ? 'active-dropdown' : '',
                 ]">Sources</li> -->
 
-               <li  @click="repo_type = 'fork:true'"
-                :class="[
-                  repo_type == 'fork:true' ? 'active-dropdown' : '',
-                ]">Forks</li>
+              <li
+                @click="repo_type = 'fork:true'"
+                :class="[repo_type == 'fork:true' ? 'active-dropdown' : '']"
+              >
+                Forks
+              </li>
 
-               <li  @click="repo_type = 'archived:true'"
-                :class="[
-                  repo_type == 'archived:true' ? 'active-dropdown' : '',
-                ]">Archived</li>
+              <li
+                @click="repo_type = 'archived:true'"
+                :class="[repo_type == 'archived:true' ? 'active-dropdown' : '']"
+              >
+                Archived
+              </li>
 
-               <li  @click="repo_type = ''"
-                :class="[
-                  repo_type == 'mirror:true' ? 'active-dropdown' : '',
-                ]">Mirrors</li>
+              <li
+                @click="repo_type = ''"
+                :class="[repo_type == 'mirror:true' ? 'active-dropdown' : '']"
+              >
+                Mirrors
+              </li>
             </ul>
           </div>
         </div>
@@ -59,8 +66,20 @@
           <div id="myDropdown2" class="dropdown-wrapper">
             <span class="dropdown-title">Select Language</span>
             <ul id="dropdown-content">
-              <li :class="[  repo_language_filter == '' ? 'active-dropdown' : '']" @click="repo_language_filter = ''" >All</li>
-               <li   :class="[  repo_language_filter == lang ? 'active-dropdown' : '']"    v-for="(lang,index) in all_languages" :key="index" @click="repo_language_filter = lang">{{lang}}</li>
+              <li
+                :class="[repo_language_filter == '' ? 'active-dropdown' : '']"
+                @click="repo_language_filter = ''"
+              >
+                All
+              </li>
+              <li
+                :class="[repo_language_filter == lang ? 'active-dropdown' : '']"
+                v-for="(lang, index) in all_languages"
+                :key="index"
+                @click="repo_language_filter = lang"
+              >
+                {{ lang }}
+              </li>
             </ul>
           </div>
         </div>
@@ -174,7 +193,7 @@
 
 <script>
 const moment = require("moment-timezone");
-import { REPOSITORIES,ALL_LANGUAGES } from "../../queries/github";
+import { REPOSITORIES, ALL_LANGUAGES } from "../../queries/github";
 export default {
   props: {
     username: {
@@ -189,14 +208,14 @@ export default {
       loading: false,
       repositories: [],
       canShow: false,
-      all_languages:[],
+      all_languages: [],
       repo_type: "fork:true ",
       repo_language_filter: "",
       repo_sort_order: "sort:updated-desc",
-       language_remark:"",
-       type_remark:"",
-       sort_remark:"",
-      filter_remark:""
+      language_remark: "",
+      type_remark: "",
+      sort_remark: "",
+      filter_remark: "",
     };
   },
   async mounted() {
@@ -217,12 +236,11 @@ export default {
       this.canShow = true;
     }, 1000);
 
-  
-   //  console.log(JSON.stringify(this.repositories, null, 2));
+    //  console.log(JSON.stringify(this.repositories, null, 2));
 
-     this.getAll_Languages();
-      await this.getRepos();
-     //this.get_allPrimaryLang();
+    this.getAll_Languages();
+    await this.getRepos();
+    //this.get_allPrimaryLang();
   },
   methods: {
     showFcunction(which) {
@@ -244,15 +262,13 @@ export default {
       this.repositories = data.data.search.edges.map((e) => {
         return e.node;
       });
-
-      
     },
 
     formatTime(moment, date) {
       var t = moment(date).from(new Date().toISOString());
 
       var isMOnth = /month|months/.test(t);
-       if (isMOnth) {
+      if (isMOnth) {
         return (
           "on " +
           moment(date).calendar(null, {
@@ -266,46 +282,45 @@ export default {
       }
     },
 
-    async getAll_Languages(){
-      let {data} = await this.$apollo.query({
+    async getAll_Languages() {
+      let { data } = await this.$apollo.query({
         query: ALL_LANGUAGES,
-        variables: { user: 'fork:true user:'+this.username },
+        variables: { user: "fork:true user:" + this.username },
       });
 
       this.all_languages = [];
 
-    
-       data.search.edges.map((e)=>{
-       return e.node.languages.nodes.map((e)=>{
-         if(this.all_languages.indexOf(e.name) == -1){
-         this.all_languages.push(e.name)
-         }
+      data.search.edges.map((e) => {
+        return e.node.languages.nodes.map((e) => {
+          if (this.all_languages.indexOf(e.name) == -1) {
+            this.all_languages.push(e.name);
+          }
 
-         return e.name});
+          return e.name;
+        });
       });
 
- //  console.log(JSON.stringify(this.all_languages,null,2));
+      //  console.log(JSON.stringify(this.all_languages,null,2));
       //console.log(data);
     },
 
-    get_allPrimaryLang(){
-       this.all_languages = [];
-      this.repositories.map((e)=>{
-          console.log(this.all_languages+"---->"+e.primaryLanguage.name);
-        if(this.all_languages.indexOf(e.primaryLanguage.name) == -1){
-        
-         this.all_languages.push(e.primaryLanguage.name);
+    get_allPrimaryLang() {
+      this.all_languages = [];
+      this.repositories.map((e) => {
+        console.log(this.all_languages + "---->" + e.primaryLanguage.name);
+        if (this.all_languages.indexOf(e.primaryLanguage.name) == -1) {
+          this.all_languages.push(e.primaryLanguage.name);
 
-           console.log(this.all_languages);
-         }
+          console.log(this.all_languages);
+        }
       });
-    }
+    },
   },
   computed: {
     options() {
       let options = "";
 
-      //work on sort order 
+      //work on sort order
       options += this.repo_sort_order + " ";
 
       if (this.repo_type != "") {
@@ -313,56 +328,76 @@ export default {
       }
 
       // work on language filter (can't be empty)
-      if(this.repo_language_filter == ""){
-      this.all_languages.map((e) => {
-        options += "language:" + e + " ";
-      });
-      console.log("not empty")
-      }else{
-        options += "language:" + this.repo_language_filter.toLowerCase() + " "
+      if (this.repo_language_filter == "") {
+        this.all_languages.map((e) => {
+          options += "language:" + e + " ";
+        });
+        console.log("not empty");
+      } else {
+        options += "language:" + this.repo_language_filter.toLowerCase() + " ";
       }
 
-      console.log(options)
-      
+      console.log(options);
 
       return (options += "user:" + this.username);
     },
   },
   watch: {
-    repositories:{
-      immediate:true,
-      handler(val){
-        console.log(JSON.stringify(val,null,2));
-      }
-    },
-      username() {
-        this.getRepos();
+    repositories: {
+      immediate: true,
+      handler(val) {
+        console.log(JSON.stringify(val, null, 2));
       },
+    },
+    username() {
+      this.getRepos();
+    },
     repo_sort_order(val) {
       this.getRepos();
-      this.sort_remark = val == 'sort:updated-desc' ? 'sorted by <b>last updated</b>' : 'sorted by <b>stars</b>'
-      this.filter_remark = this.type_remark +this.language_remark + this.sort_remark
+      this.sort_remark =
+        val == "sort:updated-desc"
+          ? "sorted by <b>last updated</b>"
+          : "sorted by <b>stars</b>";
+      this.filter_remark =
+        this.type_remark + this.language_remark + this.sort_remark;
     },
     repo_language_filter: {
       deep: true,
       handler(val) {
         this.getRepos();
-        this.filter_remark = ""
+        this.filter_remark = "";
 
-        if(val !== ""){
-        this.language_remark = val !== '' ? "written in "+val : '';
-         this.filter_remark = this.type_remark +this.language_remark + this.sort_remark
+        if (val !== "") {
+          this.language_remark = val !== "" ? "written in " + val : "";
+          this.filter_remark =
+            this.type_remark + this.language_remark + this.sort_remark;
         }
       },
     },
     repo_type(val) {
       this.getRepos();
-      this.type_remark = val == '' ? '' : val == 'is:public' ? '<b>public</b>' : val == 'is:private' ? '<b>private</b>' : val == 'fork:true' ? '<b>forked</b>' : val == 'archived:true' ? '<b>archived</b>' : val == 'mirror:true' ? '<b>mirrored</b>' : val == 'is:source' ? '<b>source</b>' : '';
-       this.type_mark = 'results for '+this.type_remark;
+      this.type_remark =
+        val == ""
+          ? ""
+          : val == "is:public"
+          ? "<b>public</b>"
+          : val == "is:private"
+          ? "<b>private</b>"
+          : val == "fork:true"
+          ? "<b>forked</b>"
+          : val == "archived:true"
+          ? "<b>archived</b>"
+          : val == "mirror:true"
+          ? "<b>mirrored</b>"
+          : val == "is:source"
+          ? "<b>source</b>"
+          : "";
+      this.type_mark = "results for " + this.type_remark;
 
-       this.filter_remark = this.type_remark +this.language_remark + this.sort_remark
+      this.filter_remark =
+        this.type_remark + this.language_remark + this.sort_remark;
 
-       console.log(JSON.stringify(this.repositories, null, 2));
+      console.log(JSON.stringify(this.repositories, null, 2));
     },
   },
 };
@@ -453,17 +488,17 @@ export default {
 
   #find-repo-input {
     flex: unset;
-    width: 95%;
+    width: 90%;
     margin: auto;
   }
 
   #sub-sec {
-    text-align: center;
+    text-align: left;
     width: 100%;
   }
 
   .sub-btn {
-    margin: 10px auto 10px auto;
+    margin: 10px 10px;
   }
 }
 
@@ -480,7 +515,7 @@ export default {
     position: absolute;
     background-color: #393c41;
     min-width: 280px;
-   
+
     margin: 5px 0px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
     z-index: 1;
@@ -505,7 +540,7 @@ export default {
     margin: 0px 0px;
     padding: 0px;
     list-style-type: none;
-     max-height: 400px;
+    max-height: 400px;
     overflow: auto;
   }
 

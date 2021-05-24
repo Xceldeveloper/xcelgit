@@ -8,11 +8,14 @@
           <div id="polifix-wrapper">
             <div id="profile-pic-wrapper" v-if="data.avatarUrl != ''">
               <a :href="'https://github.com/' + username">
-                <img id="avatar" :src="data.avatarUrl"
+                <img
+                  style="width: 100%; height: 100%; border-radius: 50%"
+                  :src="data.avatarUrl"
               /></a>
-              <button id="set-status-btn" v-html="data.status.emojiHTML">
-               
-              </button>
+              <button
+                id="set-status-btn"
+                v-html="data.status.emojiHTML"
+              ></button>
             </div>
 
             <span id="name" v-if="data.name !== ''">{{ data.name }}</span>
@@ -22,11 +25,13 @@
 
           <button id="set-stat-btn2">
             <span
-              class="mdi mdi-emoticon-excited-outline"
-              v-if="data.isViewer"
+              style="display: inline-block"
+              v-html="data.status.emojiHTML"
             ></span>
-            Set status
+            {{ data.status.message }}
           </button>
+
+          <span id="user-bio2" v-if="data.bio !== ''"> {{ data.bio }}</span>
 
           <button id="edit-profile-btn" v-if="data.isViewer">
             Edit profile
@@ -60,7 +65,7 @@
               >
             </li>
             <li><span class="dix"></span></li>
-          
+
             <li
               v-if="
                 data.starredRepositories.totalCount &&
@@ -68,15 +73,13 @@
               "
             >
               <a
-                style="margin-left: 3px;color:#fff"
+                style="margin-left: 3px; color: #fff"
                 :href="'https://github.com/' + username + '?tab=stars'"
                 ><span
                   style="color: #616972; margin-right: 2px"
                   class="mdi mdi-star-outline"
                 ></span>
-                {{
-                  data.starredRepositories.totalCount
-                }}</a
+                {{ data.starredRepositories.totalCount }}</a
               >
             </li>
           </ul>
@@ -89,7 +92,9 @@
               <span class="mdi mdi-map-marker"></span> {{ data.location }}
             </li>
             <li v-if="data.email !== null && data.email !== ''">
-              <a :href="'mailto:'+email"><span class="mdi mdi-email"></span> {{ data.email }}</a>
+              <a :href="'mailto:' + email"
+                ><span class="mdi mdi-email"></span> {{ data.email }}</a
+              >
             </li>
 
             <li v-if="data.websiteUrl != ''">
@@ -107,6 +112,11 @@
           </ul>
         </div>
 
+        
+           <div class="sm-only">
+              <tabmenu/>
+           </div>
+        
 
         <div id="dynamic-component-wrapper">
           <component :username="username" :is="activeComponent" />
@@ -172,7 +182,7 @@ export default {
     search: {
       immediate: true,
       handler(val) {
-       // console.log(JSON.stringify(val, null, 2));
+        // console.log(JSON.stringify(val, null, 2));
       },
     },
   },
@@ -187,7 +197,7 @@ export default {
   },
   mounted() {
     this.username = this.$route.query.username;
-   
+
     // this.activeComponent =  this.$route.query.tab+""
   },
 };
@@ -229,8 +239,8 @@ export default {
 }
 
 #avatar {
-  width: 100%;
-  height: 100%;
+  width: 270px;
+  height: 270px;
   min-height: 100px;
   min-width: 100px;
   object-fit: cover;
@@ -282,6 +292,10 @@ export default {
   padding: 8px 7.5%;
   margin-top: 6px;
   text-align: left;
+}
+
+#user-bio2{
+  display: none;
 }
 
 #edit-profile-btn {
@@ -394,6 +408,10 @@ export default {
   border-radius: 7px;
 }
 
+.sm-only{
+  display: none;
+}
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1000px) {
   #over-all-wrapper {
     width: 100%;
@@ -416,6 +434,7 @@ export default {
     display: inline-block;
     font-size: 10px;
   }
+  
 }
 
 @media only screen and (min-device-width: 1001px) {
@@ -444,6 +463,10 @@ export default {
 }
 
 @media only screen and (max-device-width: 767px) {
+
+  .sm-only{
+    display: block;
+  }
   #set-status-btn {
     display: none;
   }
@@ -451,7 +474,10 @@ export default {
     width: 100%;
     height: auto;
     position: unset;
+    margin-top: 10px;
   }
+
+
 
   #polifix-wrapper {
     white-space: nowrap;
@@ -459,10 +485,10 @@ export default {
   }
 
   #profile-pic-wrapper {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     background-color: #0d1117;
-    margin: 0px 0px 0px 7.5%;
+    margin: 0px 10px 0px 7.5%;
     border-radius: 50%;
     position: unset;
     top: unset;
@@ -470,14 +496,32 @@ export default {
     box-shadow: 0px 0px 15px #202022;
     float: left;
     z-index: 0;
+
+  }
+  /* 
+  #avatar {
+  width: 60px;
+  height: 60px;
+
+  object-fit: cover;
+  border-radius: 50%;
+} */
+
+
+
+
+  #name{
+    padding-top: 10px;
+    display: block;
   }
 
   #user-name {
-    display: inline-block;
+    
     font-size: 20px;
     color: #616972;
-    padding: 10px 5px;
-    margin-left: 10px;
+    padding: 5px 5px;
+    margin-left: 5px;
+   
   }
 
   #set-stat-btn2 {
@@ -492,6 +536,28 @@ export default {
     text-align: left;
     padding: 10px;
   }
+
+  #user-internal-links{
+    padding:1px 10px;
+    text-align: left;
+    margin-left: 25px;
+  }
+
+
+#user-bio{
+  display: none;
+}
+
+  
+#user-bio2{
+  display: block;
+    display: block;
+  font-size: 17px;
+  color: #c9d1d9;
+  padding: 8px 7.5%;
+  margin-top: 6px;
+  text-align: left;
+}
 }
 
 #footer {
