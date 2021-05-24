@@ -6,10 +6,10 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/:username?",
+    path: "/",
     name: "index",
     component: index,
-     props:true
+    // props:true
   },
   {
     path: "/about",
